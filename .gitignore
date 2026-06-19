@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+
+# environment
+.env
+.env.local
+.env.production
+.env.*.local
+backend/.env
+frontend/.env
+frontend/.env.production
+
+# build
+frontend/build/
+
+# logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# temp / local tools
+_pdf_pages/
+_pdf_text.txt
+_extract_pdf.js
+package-lock.json
+package.json
+
+# uploads (optional local files)
+backend/upload/*
+!backend/upload/.gitkeep
