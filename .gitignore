@@ -21,12 +21,12 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# temp / local tools
+# temp / local tools (root only)
 _pdf_pages/
 _pdf_text.txt
 _extract_pdf.js
-package-lock.json
-package.json
+/package-lock.json
+/package.json
 
 # uploads (optional local files)
 backend/upload/*
