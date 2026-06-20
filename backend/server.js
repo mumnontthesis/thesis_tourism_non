@@ -7,7 +7,8 @@ const db = require('./db');
 
 const DB_SCHEMA = process.env.DB_NAME || 'tourism_nonthaburi'
 
-const app = express();
+const app = express()
+app.set('trust proxy', 1)
 const upload = multer();
 
 function fileBufferToDataUrl(file) {
