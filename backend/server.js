@@ -1,8 +1,11 @@
+require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const multer = require('multer'); // เพิ่ม multer เพื่ออ่าน FormData
 const db = require('./db');
+
+const DB_SCHEMA = process.env.DB_NAME || 'tourism_nonthaburi'
 
 const app = express();
 const upload = multer();
@@ -29,11 +32,11 @@ async function columnExists(tableName, columnName) {
   const sql = `
     SELECT COUNT(*) as cnt
     FROM information_schema.columns
-    WHERE table_schema = 'tourism_nonthaburi'
+    WHERE table_schema = ?
       AND table_name = ?
       AND column_name = ?
   `
-  const [rows] = await db.promise().query(sql, [tableName, columnName])
+  const [rows] = await db.promise().query(sql, [DB_SCHEMA, tableName, columnName])
   const exists = (rows[0]?.cnt || 0) > 0
   columnExistsCache.set(key, exists)
   return exists
@@ -112,9 +115,9 @@ async function getPlaceViewStats(placeIds) {
 async function getPrimaryKeyColumns(tableName) {
   const [rows] = await db.promise().query(
     `SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
-     WHERE TABLE_SCHEMA = 'tourism_nonthaburi' AND TABLE_NAME = ? AND CONSTRAINT_NAME = 'PRIMARY'
+     WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND CONSTRAINT_NAME = 'PRIMARY'
      ORDER BY ORDINAL_POSITION`,
-    [tableName]
+    [DB_SCHEMA, tableName]
   )
   return rows.map((r) => r.COLUMN_NAME)
 }
@@ -122,8 +125,8 @@ async function getPrimaryKeyColumns(tableName) {
 async function getForeignKeyNames(tableName) {
   const [rows] = await db.promise().query(
     `SELECT CONSTRAINT_NAME FROM information_schema.TABLE_CONSTRAINTS
-     WHERE TABLE_SCHEMA = 'tourism_nonthaburi' AND TABLE_NAME = ? AND CONSTRAINT_TYPE = 'FOREIGN KEY'`,
-    [tableName]
+     WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND CONSTRAINT_TYPE = 'FOREIGN KEY'`,
+    [DB_SCHEMA, tableName]
   )
   return rows.map((r) => r.CONSTRAINT_NAME)
 }
